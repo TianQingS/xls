@@ -35,6 +35,16 @@ func (r *Row) Col(i int) string {
 	return ""
 }
 
+// Get length of the Row
+func (r *Row) Len() int {
+	return len(r.cols)
+}
+
+// Get height of the Row
+func (r *Row) Height() int {
+	return int(r.info.Height)
+}
+
 //LastCol Get the number of Last Col of the Row.
 func (r *Row) LastCol() int {
 	return int(r.info.Lcell)
