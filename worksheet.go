@@ -23,6 +23,8 @@ type WorkSheet struct {
 	//NOTICE: this is the max row number of the sheet, so it should be count -1
 	MaxRow uint16
 	parsed bool
+	// ColWidth
+	ColWidth map[int]int
 }
 
 func (w *WorkSheet) Row(i int) *Row {
@@ -155,6 +157,23 @@ func (w *WorkSheet) parseBof(buf io.ReadSeeker, b *bof, pre *bof) *bof {
 		w.addRange(&hy.CellRange, &hy)
 	case 0x809:
 		buf.Seek(int64(b.Size), 1)
+	case 0x7d: //COLINFO
+		info := make([]byte, b.Size)
+		binary.Read(buf, binary.LittleEndian, &info)
+		var firstColx uint16
+		binary.Read(bytes.NewBuffer(info[0:2]), binary.LittleEndian, &firstColx)
+		var lastColx uint16
+		binary.Read(bytes.NewBuffer(info[2:4]), binary.LittleEndian, &lastColx)
+		var width uint16
+		binary.Read(bytes.NewBuffer(info[4:6]), binary.LittleEndian, &width)
+		if firstColx >= 0 && lastColx <= 256 {
+			for i := int(firstColx); i <= int(lastColx); i++ {
+				if w.ColWidth == nil {
+					w.ColWidth = make(map[int]int, 0)
+				}
+				w.ColWidth[i] = int(width)
+			}
+		}
 	case 0xa:
 	default:
 		// log.Printf("Unknow %X,%d\n", b.Id, b.Size)
