@@ -37,7 +37,11 @@ func (r *Row) Col(i int) string {
 
 // Get length of the Row
 func (r *Row) Len() int {
-	return len(r.cols)
+	m := 0
+	if r.cols != nil {
+		m = r.LastCol()
+	}
+	return m
 }
 
 // Get height of the Row
