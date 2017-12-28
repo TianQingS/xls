@@ -229,3 +229,17 @@ func (w *WorkSheet) addRow(info *rowInfo) (row *Row) {
 	}
 	return
 }
+
+// 获取表格列数
+func (w *WorkSheet) RowLen() int {
+	l := 0
+	for _, row := range w.rows {
+		if row != nil {
+			n := row.Len()
+			if n > l {
+				l = n
+			}
+		}
+	}
+	return l
+}
