@@ -19,3 +19,6 @@ It has just the reading function without the format.
 
 * Follow the example in GODOC
 
+# Local modification
+
+* Add api to get number of columns and column widths.
